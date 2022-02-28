@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2022 at 09:18 PM
+-- Generation Time: Feb 28, 2022 at 09:47 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -39,6 +39,18 @@ CREATE TABLE `employees` (
   `Last_Active` datetime DEFAULT NULL,
   `ACTIVE` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`EmployeeID`, `First_Name`, `Middle_Name`, `Last_Name`, `Email`, `Password`, `Creation_Date`, `Created_By`, `Last_Active`, `ACTIVE`) VALUES
+(1, 'Wesley', NULL, 'Geboers', 'w.geboers@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', NULL, NULL, 1),
+(2, 'Marcel', NULL, 'Forman', 'm.forman@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1),
+(3, 'Bart', NULL, 'Frijters', 'bjal.frijters@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1),
+(4, 'Thomas', NULL, 'Daane', 'trbl.daane@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1),
+(5, 'Sanel', 'van den', 'Bogert', 'avd.bogert@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1),
+(6, 'Lysette', NULL, 'Schippers', 'l.schippers@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -86,6 +98,14 @@ CREATE TABLE `orderlines` (
   `Price_PerUnit` decimal(65,2) NOT NULL,
   `Total_Price` decimal(65,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Triggers `orderlines`
+--
+DELIMITER $$
+CREATE TRIGGER `LineTotalPrice` BEFORE INSERT ON `orderlines` FOR EACH ROW SET NEW.Total_Price = NEW.Amount * NEW.Price_PerUnit
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -164,7 +184,8 @@ CREATE TABLE `users` (
 -- Indexes for table `employees`
 --
 ALTER TABLE `employees`
-  ADD PRIMARY KEY (`EmployeeID`);
+  ADD PRIMARY KEY (`EmployeeID`),
+  ADD KEY `EmpCreated_By` (`Created_By`);
 
 --
 -- Indexes for table `employees-roles`
@@ -225,7 +246,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `EmployeeID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `EmployeeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `employees-roles`
@@ -272,6 +293,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `employees`
+--
+ALTER TABLE `employees`
+  ADD CONSTRAINT `EmpCreated_By` FOREIGN KEY (`Created_By`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `employees-roles`
