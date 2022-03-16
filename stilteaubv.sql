@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 03, 2022 at 07:52 PM
+-- Generation Time: Mar 16, 2022 at 09:42 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -190,7 +190,8 @@ INSERT INTO `productlogs` (`LogID`, `ProductID`, `Modified_Date`, `Modified_By`,
 (2, 1, '2022-03-03 15:52:39', 3, NULL, NULL, NULL, '60.99'),
 (3, 3, '2022-03-03 15:52:39', 3, NULL, NULL, 10, NULL),
 (4, 2, '2022-03-03 15:52:39', 3, NULL, NULL, 20, NULL),
-(5, 5, '2022-03-03 15:52:39', 3, NULL, NULL, 15, NULL);
+(5, 5, '2022-03-03 15:52:39', 3, NULL, NULL, 15, NULL),
+(6, 4, '2022-03-16 20:40:33', 3, NULL, NULL, 20, '59.99');
 
 -- --------------------------------------------------------
 
@@ -216,7 +217,7 @@ INSERT INTO `products` (`ProductID`, `Name`, `Description`, `Stock`, `Price`, `C
 (1, '60\'s Package', 'Jaren 60 thema met 10 headsets en 1 zender', 12, '64.99', '2022-03-03 15:42:27', 1),
 (2, '70\'s Package', 'Jaren 70 thema met 10 headsets en 1 zender', 15, '64.99', '2022-03-03 15:42:27', 1),
 (3, '80\'s Package', 'Jaren 80 thema met 10 headsets en 1 zender', 6, '69.99', '2022-03-03 15:42:27', 1),
-(4, '90\'s Package', 'Jaren 90 thema met 10 headsets en 1 zender', 18, '69.99', '2022-03-03 15:42:27', 1),
+(4, '90\'s Package', 'Jaren 90 thema met 10 headsets en 1 zender', 20, '59.99', '2022-03-03 15:42:27', 1),
 (5, '00\'s Package', 'Jaren 00 thema met 10 headsets en 1 zender', 3, '74.99', '2022-03-03 15:42:27', 1);
 
 -- --------------------------------------------------------
@@ -434,7 +435,7 @@ ALTER TABLE `orderlines`
 -- AUTO_INCREMENT for table `productlogs`
 --
 ALTER TABLE `productlogs`
-  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `products`
