@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 16, 2022 at 09:42 PM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 8.1.2
+-- Generation Time: Mar 20, 2022 at 11:00 PM
+-- Server version: 10.4.21-MariaDB
+-- PHP Version: 8.0.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `stilteaubv`
+-- Database: `test2`
 --
 
 -- --------------------------------------------------------
@@ -79,6 +79,20 @@ INSERT INTO `employees-roles` (`TableID`, `EmployeeID`, `RoleID`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `invoices`
+-- (See below for the actual view)
+--
+CREATE TABLE `invoices` (
+`First_Name` varchar(25)
+,`Last_Name` varchar(25)
+,`Email` varchar(50)
+,`Phone_Number` varchar(20)
+,`Total_Price` decimal(65,2)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `orderheaders`
 --
 
@@ -86,9 +100,6 @@ CREATE TABLE `orderheaders` (
   `HeaderID` int(11) NOT NULL,
   `Order_By` int(11) DEFAULT NULL,
   `Total_Price` decimal(65,2) NOT NULL,
-  `Deliver_Adres` varchar(255) NOT NULL,
-  `Deliver_Zipcode` varchar(10) NOT NULL,
-  `Deliver_City` varchar(50) NOT NULL,
   `Creation_Date` timestamp NOT NULL DEFAULT current_timestamp(),
   `Finished_Date` datetime DEFAULT NULL,
   `Status` varchar(25) NOT NULL
@@ -98,14 +109,14 @@ CREATE TABLE `orderheaders` (
 -- Dumping data for table `orderheaders`
 --
 
-INSERT INTO `orderheaders` (`HeaderID`, `Order_By`, `Total_Price`, `Deliver_Adres`, `Deliver_Zipcode`, `Deliver_City`, `Creation_Date`, `Finished_Date`, `Status`) VALUES
-(1, 1, '209.99', 'Midscheeps 65', '8899 BT', 'Vlieland', '2022-03-03 16:01:00', NULL, 'In behandeling'),
-(2, 3, '69.99', 'Blauwe Pan 56-A', '1317 AP', 'Almere', '2022-03-03 16:01:00', '2022-03-03 17:01:00', 'Geleverd'),
-(3, 1, '349.95', 'Olivierplaats 34', '3813 JD', 'Amersfoort', '2022-01-12 17:05:40', '2022-01-17 19:40:58', 'Geleverd'),
-(4, 2, '274.96', 'Midscheeps 65', '8899 BT', 'Vlieland', '2022-03-03 18:06:26', NULL, 'In behandeling'),
-(5, 4, '69.99', 'Blauwe Pan 56-A', '1317 AP', 'Almere', '2021-03-03 18:06:26', '2021-03-05 19:45:30', 'Geleverd'),
-(6, 4, '349.95', 'Midscheeps 65', '8899 BT', 'Vlieland', '2022-02-23 18:11:56', '2022-02-25 19:40:39', 'Geleverd'),
-(7, 5, '634.91', 'Blauwe Pan 56-A', '1317 AP', 'Almere', '2022-02-09 18:11:56', '2022-03-03 19:11:56', 'Geleverd');
+INSERT INTO `orderheaders` (`HeaderID`, `Order_By`, `Total_Price`, `Creation_Date`, `Finished_Date`, `Status`) VALUES
+(1, 1, '209.99', '2022-03-03 16:01:00', NULL, 'In behandeling'),
+(2, 3, '69.99', '2022-03-03 16:01:00', '2022-03-03 17:01:00', 'Geleverd'),
+(3, 1, '349.95', '2022-01-12 17:05:40', '2022-01-17 19:40:58', 'Geleverd'),
+(4, 2, '274.96', '2022-03-03 18:06:26', NULL, 'In behandeling'),
+(5, 4, '69.99', '2021-03-03 18:06:26', '2021-03-05 19:45:30', 'Geleverd'),
+(6, 4, '349.95', '2022-02-23 18:11:56', '2022-02-25 19:40:39', 'Geleverd'),
+(7, 5, '634.91', '2022-02-09 18:11:56', '2022-03-03 19:11:56', 'Geleverd');
 
 -- --------------------------------------------------------
 
@@ -117,38 +128,35 @@ CREATE TABLE `orderlines` (
   `LineID` int(11) NOT NULL,
   `HeaderID` int(11) NOT NULL,
   `ProductID` int(11) DEFAULT NULL,
-  `Name` varchar(50) NOT NULL,
-  `Description` varchar(255) DEFAULT NULL,
   `Amount` int(11) NOT NULL,
-  `Price_PerUnit` decimal(65,2) NOT NULL,
-  `Total_Price` decimal(65,2) NOT NULL
+  `PriceLine` decimal(65,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `orderlines`
 --
 
-INSERT INTO `orderlines` (`LineID`, `HeaderID`, `ProductID`, `Name`, `Description`, `Amount`, `Price_PerUnit`, `Total_Price`) VALUES
-(1, 1, 2, '70\'s Package', 'Jaren 70 thema met 10 headsets en 1 zender', 1, '64.99', '64.99'),
-(2, 1, 3, '80\'s Package', 'Jaren 80 thema met 10 headsets en 1 zender', 3, '69.99', '209.97'),
-(3, 1, 5, '00\'s Package', 'Jaren 00 thema met 10 headsets en 1 zender', 1, '74.99', '74.99'),
-(4, 2, 4, '90\'s Package', 'Jaren 90 thema met 10 headsets en 1 zender', 1, '69.99', '69.99'),
-(25, 3, 2, '70\'s Package', 'Jaren 70 thema met 10 headsets en 1 zender', 1, '64.99', '64.99'),
-(26, 3, 3, '80\'s Package', 'Jaren 80 thema met 10 headsets en 1 zender', 3, '69.99', '209.97'),
-(27, 3, 5, '00\'s Package', 'Jaren 00 thema met 10 headsets en 1 zender', 1, '74.99', '74.99'),
-(28, 3, 4, '90\'s Package', 'Jaren 90 thema met 10 headsets en 1 zender', 5, '69.99', '349.95'),
-(29, 4, 2, '70\'s Package', 'Jaren 70 thema met 10 headsets en 1 zender', 1, '64.99', '64.99'),
-(30, 4, 3, '80\'s Package', 'Jaren 80 thema met 10 headsets en 1 zender', 3, '69.99', '209.97'),
-(31, 4, 5, '00\'s Package', 'Jaren 00 thema met 10 headsets en 1 zender', 1, '74.99', '74.99'),
-(32, 5, 4, '90\'s Package', 'Jaren 90 thema met 10 headsets en 1 zender', 1, '69.99', '69.99'),
-(33, 5, 3, '80\'s Package', 'Jaren 80 thema met 10 headsets en 1 zender', 2, '69.99', '139.98'),
-(34, 6, 2, '70\'s Package', 'Jaren 70 thema met 10 headsets en 1 zender', 1, '64.99', '64.99'),
-(35, 6, 3, '80\'s Package', 'Jaren 80 thema met 10 headsets en 1 zender', 3, '69.99', '209.97'),
-(36, 6, 5, '00\'s Package', 'Jaren 00 thema met 10 headsets en 1 zender', 1, '74.99', '74.99'),
-(37, 7, 4, '90\'s Package', 'Jaren 90 thema met 10 headsets en 1 zender', 1, '69.99', '69.99'),
-(38, 7, 3, '80\'s Package', 'Jaren 80 thema met 10 headsets en 1 zender', 3, '69.99', '209.97'),
-(39, 7, 5, '00\'s Package', 'Jaren 00 thema met 10 headsets en 1 zender', 1, '74.99', '74.99'),
-(40, 7, 4, '90\'s Package', 'Jaren 90 thema met 10 headsets en 1 zender', 4, '69.99', '279.96');
+INSERT INTO `orderlines` (`LineID`, `HeaderID`, `ProductID`, `Amount`, `PriceLine`) VALUES
+(1, 1, 2, 1, '64.99'),
+(2, 1, 3, 3, '209.97'),
+(3, 1, 5, 1, '74.99'),
+(4, 2, 4, 1, '69.99'),
+(25, 3, 2, 1, '64.99'),
+(26, 3, 3, 3, '209.97'),
+(27, 3, 5, 1, '74.99'),
+(28, 3, 4, 5, '349.95'),
+(29, 4, 2, 1, '64.99'),
+(30, 4, 3, 3, '209.97'),
+(31, 4, 5, 1, '74.99'),
+(32, 5, 4, 1, '69.99'),
+(33, 5, 3, 2, '139.98'),
+(34, 6, 2, 1, '64.99'),
+(35, 6, 3, 3, '209.97'),
+(36, 6, 5, 1, '74.99'),
+(37, 7, 4, 1, '69.99'),
+(38, 7, 3, 3, '209.97'),
+(39, 7, 5, 1, '74.99'),
+(40, 7, 4, 4, '279.96');
 
 --
 -- Triggers `orderlines`
@@ -317,6 +325,15 @@ INSERT INTO `users` (`UserID`, `First_Name`, `Middle_Name`, `Last_Name`, `Email`
 -- --------------------------------------------------------
 
 --
+-- Structure for view `invoices`
+--
+DROP TABLE IF EXISTS `invoices`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `invoices`  AS SELECT `users`.`First_Name` AS `First_Name`, `users`.`Last_Name` AS `Last_Name`, `users`.`Email` AS `Email`, `users`.`Phone_Number` AS `Phone_Number`, `orderheaders`.`Total_Price` AS `Total_Price` FROM (`users` join `orderheaders`) WHERE `users`.`UserID` = `orderheaders`.`Order_By` ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `revenuepermonth`
 --
 DROP TABLE IF EXISTS `revenuepermonth`;
@@ -339,15 +356,8 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `top10productsprice`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `top10productsprice`  AS SELECT `prd`.`Name` AS `ProductName`, `prd`.`Description` AS `ProductDescription`, sum(`ol`.`Total_Price`) AS `TotalPriceSold` FROM (`orderlines` `ol` left join `products` `prd` on(`ol`.`ProductID` = `prd`.`ProductID`)) GROUP BY `ol`.`ProductID` ORDER BY sum(`ol`.`Total_Price`) DESC LIMIT 0, 10 ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `top10productsprice`  AS SELECT `prd`.`Name` AS `ProductName`, `prd`.`Description` AS `ProductDescription`, sum(`ol`.`PriceLine`) AS `TotalPriceSold` FROM (`orderlines` `ol` left join `products` `prd` on(`ol`.`ProductID` = `prd`.`ProductID`)) GROUP BY `ol`.`ProductID` ORDER BY sum(`ol`.`PriceLine`) DESC LIMIT 0, 10 ;
 
---
--- Structure for view 'invoices'
-DROP TABLE IF EXISTS `invoices`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `invoices` AS SELECT users.`First_Name`, users.`Last_Name`, users.`Email`, users.`Phone_Number`, orderheaders.`Total_Price` = orderheaders.`Total_Price` * 1.21 FROM users, orderheaders WHERE users.UserID = orderheaders.Order_By ;
-
---
 --
 -- Indexes for dumped tables
 --
@@ -455,61 +465,6 @@ ALTER TABLE `products`
 --
 ALTER TABLE `roles`
   MODIFY `RoleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `employees`
---
-ALTER TABLE `employees`
-  ADD CONSTRAINT `EmpCreated_By` FOREIGN KEY (`Created_By`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL;
-
---
--- Constraints for table `employees-roles`
---
-ALTER TABLE `employees-roles`
-  ADD CONSTRAINT `employees-roles_ibfk_1` FOREIGN KEY (`EmployeeID`) REFERENCES `employees` (`EmployeeID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `employees-roles_ibfk_2` FOREIGN KEY (`RoleID`) REFERENCES `roles` (`RoleID`) ON DELETE CASCADE;
-
---
--- Constraints for table `orderheaders`
---
-ALTER TABLE `orderheaders`
-  ADD CONSTRAINT `orderheaders_ibfk_1` FOREIGN KEY (`Order_By`) REFERENCES `users` (`UserID`) ON DELETE SET NULL;
-
---
--- Constraints for table `orderlines`
---
-ALTER TABLE `orderlines`
-  ADD CONSTRAINT `orderlines_ibfk_1` FOREIGN KEY (`HeaderID`) REFERENCES `orderheaders` (`HeaderID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `orderlines_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`) ON DELETE SET NULL;
-
---
--- Constraints for table `productlogs`
---
-ALTER TABLE `productlogs`
-  ADD CONSTRAINT `productlogs_ibfk_1` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `productlogs_ibfk_2` FOREIGN KEY (`Modified_By`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL;
-
---
--- Constraints for table `products`
---
-ALTER TABLE `products`
-  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`Created_By`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL;
-
---
--- Constraints for table `roles`
---
-ALTER TABLE `roles`
-  ADD CONSTRAINT `roles_ibfk_1` FOREIGN KEY (`Created_By`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
