@@ -342,6 +342,13 @@ DROP TABLE IF EXISTS `top10productsprice`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `top10productsprice`  AS SELECT `prd`.`Name` AS `ProductName`, `prd`.`Description` AS `ProductDescription`, sum(`ol`.`Total_Price`) AS `TotalPriceSold` FROM (`orderlines` `ol` left join `products` `prd` on(`ol`.`ProductID` = `prd`.`ProductID`)) GROUP BY `ol`.`ProductID` ORDER BY sum(`ol`.`Total_Price`) DESC LIMIT 0, 10 ;
 
 --
+-- Structure for view 'invoices'
+DROP TABLE IF EXISTS `invoices`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `invoices` AS SELECT users.`First_Name`, users.`Last_Name`, users.`Email`, users.`Phone_Number`, orderheaders.`Total_Price` = orderheaders.`Total_Price` * 1.21 FROM users, orderheaders WHERE users.UserID = orderheaders.Order_By ;
+
+--
+--
 -- Indexes for dumped tables
 --
 
