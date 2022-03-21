@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 20, 2022 at 11:00 PM
+-- Generation Time: Mar 21, 2022 at 01:15 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.11
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `test2`
+-- Database: `stilteaubv`
 --
 
 -- --------------------------------------------------------
@@ -162,15 +162,25 @@ INSERT INTO `orderlines` (`LineID`, `HeaderID`, `ProductID`, `Amount`, `PriceLin
 -- Triggers `orderlines`
 --
 DELIMITER $$
-CREATE TRIGGER `LineTotalPrice` BEFORE INSERT ON `orderlines` FOR EACH ROW SET NEW.Total_Price = NEW.Amount * NEW.Price_PerUnit
-$$
-DELIMITER ;
-DELIMITER $$
 CREATE TRIGGER `UpdateTotalPriceHeader` AFTER INSERT ON `orderlines` FOR EACH ROW UPDATE `OrderHeaders` SET
 	`Total_Price` = (SELECT SUM(`Total_Price`) FROM `OrderLines` WHERE `HeaderID` = NEW.`HeaderID`)
     WHERE `HeaderID` = NEW.`HeaderID`
 $$
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `orderstatus`
+-- (See below for the actual view)
+--
+CREATE TABLE `orderstatus` (
+`First_Name` varchar(25)
+,`Last_Name` varchar(25)
+,`Email` varchar(50)
+,`Phone_Number` varchar(20)
+,`Total_Price` decimal(65,2)
+);
 
 -- --------------------------------------------------------
 
@@ -334,6 +344,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
+-- Structure for view `orderstatus`
+--
+DROP TABLE IF EXISTS `orderstatus`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `orderstatus`  AS   (select `users`.`First_Name` AS `First_Name`,`users`.`Last_Name` AS `Last_Name`,`users`.`Email` AS `Email`,`users`.`Phone_Number` AS `Phone_Number`,`orderheaders`.`Total_Price` AS `Total_Price` from (`users` join `orderheaders`) where `users`.`UserID` = `orderheaders`.`Order_By`)  ;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `revenuepermonth`
 --
 DROP TABLE IF EXISTS `revenuepermonth`;
@@ -459,12 +478,6 @@ ALTER TABLE `productlogs`
 --
 ALTER TABLE `products`
   MODIFY `ProductID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `roles`
---
-ALTER TABLE `roles`
-  MODIFY `RoleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
