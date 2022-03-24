@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2022 at 10:10 PM
+-- Generation Time: Feb 28, 2022 at 09:47 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -40,6 +40,18 @@ CREATE TABLE `employees` (
   `ACTIVE` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`EmployeeID`, `First_Name`, `Middle_Name`, `Last_Name`, `Email`, `Password`, `Creation_Date`, `Created_By`, `Last_Active`, `ACTIVE`) VALUES
+(1, 'Wesley', NULL, 'Geboers', 'w.geboers@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', NULL, NULL, 1),
+(2, 'Marcel', NULL, 'Forman', 'm.forman@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1),
+(3, 'Bart', NULL, 'Frijters', 'bjal.frijters@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1),
+(4, 'Thomas', NULL, 'Daane', 'trbl.daane@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1),
+(5, 'Sanel', 'van den', 'Bogert', 'avd.bogert@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1),
+(6, 'Lysette', NULL, 'Schippers', 'l.schippers@student.avans.nl', 'P@ssw0rd@2022!', '2022-02-28 20:45:51', 1, NULL, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -50,6 +62,66 @@ CREATE TABLE `employees-roles` (
   `TableID` int(11) NOT NULL,
   `EmployeeID` int(11) NOT NULL,
   `RoleID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orderheaders`
+--
+
+CREATE TABLE `orderheaders` (
+  `HeaderID` int(11) NOT NULL,
+  `Order_By` int(11) DEFAULT NULL,
+  `Total_Price` decimal(65,2) NOT NULL,
+  `Deliver_Adres` varchar(255) NOT NULL,
+  `Deliver_Zipcode` varchar(10) NOT NULL,
+  `Deliver_City` varchar(50) NOT NULL,
+  `Creation_Date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `Finished_Date` datetime DEFAULT NULL,
+  `Status` varchar(25) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orderlines`
+--
+
+CREATE TABLE `orderlines` (
+  `LineID` int(11) NOT NULL,
+  `HeaderID` int(11) NOT NULL,
+  `ProductID` int(11) DEFAULT NULL,
+  `Name` varchar(50) NOT NULL,
+  `Description` varchar(255) DEFAULT NULL,
+  `Amount` int(11) NOT NULL,
+  `Price_PerUnit` decimal(65,2) NOT NULL,
+  `Total_Price` decimal(65,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Triggers `orderlines`
+--
+DELIMITER $$
+CREATE TRIGGER `LineTotalPrice` BEFORE INSERT ON `orderlines` FOR EACH ROW SET NEW.Total_Price = NEW.Amount * NEW.Price_PerUnit
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `productlogs`
+--
+
+CREATE TABLE `productlogs` (
+  `LogID` int(11) NOT NULL,
+  `ProductID` int(11) NOT NULL,
+  `Modified_Date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `Modified_By` int(11) DEFAULT NULL,
+  `Name` varchar(50) DEFAULT NULL,
+  `Description` varchar(255) DEFAULT NULL,
+  `Stock` int(11) DEFAULT NULL,
+  `Price` decimal(65,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -82,6 +154,28 @@ CREATE TABLE `roles` (
   `Created_By` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `UserID` int(11) NOT NULL AUTO_INCREMENT,
+  `First_Name` varchar(25) NOT NULL,
+  `Middle_Name` varchar(25) DEFAULT NULL,
+  `Last_Name` varchar(25) NOT NULL,
+  `Email` varchar(50) DEFAULT NULL,
+  `Phone_Number` varchar(20) DEFAULT NULL,
+  `Password` varchar(25) NOT NULL,
+  `Street` varchar(100) DEFAULT NULL,
+  `House_Number` int(11) DEFAULT NULL,
+  `House_Number_Addition` varchar(25) DEFAULT NULL,
+  `Zipcode` varchar(10) DEFAULT NULL,
+  `City` varchar(50) DEFAULT NULL,
+  `Creation_Date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -90,7 +184,8 @@ CREATE TABLE `roles` (
 -- Indexes for table `employees`
 --
 ALTER TABLE `employees`
-  ADD PRIMARY KEY (`EmployeeID`);
+  ADD PRIMARY KEY (`EmployeeID`),
+  ADD KEY `EmpCreated_By` (`Created_By`);
 
 --
 -- Indexes for table `employees-roles`
@@ -99,6 +194,29 @@ ALTER TABLE `employees-roles`
   ADD PRIMARY KEY (`TableID`),
   ADD KEY `EmployeeID` (`EmployeeID`),
   ADD KEY `RoleID` (`RoleID`);
+
+--
+-- Indexes for table `orderheaders`
+--
+ALTER TABLE `orderheaders`
+  ADD PRIMARY KEY (`HeaderID`),
+  ADD KEY `Order_By` (`Order_By`);
+
+--
+-- Indexes for table `orderlines`
+--
+ALTER TABLE `orderlines`
+  ADD PRIMARY KEY (`LineID`),
+  ADD KEY `HeaderID` (`HeaderID`),
+  ADD KEY `ProductID` (`ProductID`);
+
+--
+-- Indexes for table `productlogs`
+--
+ALTER TABLE `productlogs`
+  ADD PRIMARY KEY (`LogID`),
+  ADD KEY `ProductID` (`ProductID`),
+  ADD KEY `Modified_By` (`Modified_By`);
 
 --
 -- Indexes for table `products`
@@ -115,6 +233,12 @@ ALTER TABLE `roles`
   ADD KEY `Created_By` (`Created_By`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`UserID`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -122,13 +246,31 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `EmployeeID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `EmployeeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `employees-roles`
 --
 ALTER TABLE `employees-roles`
   MODIFY `TableID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `orderheaders`
+--
+ALTER TABLE `orderheaders`
+  MODIFY `HeaderID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `orderlines`
+--
+ALTER TABLE `orderlines`
+  MODIFY `LineID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `productlogs`
+--
+ALTER TABLE `productlogs`
+  MODIFY `LogID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -143,8 +285,20 @@ ALTER TABLE `roles`
   MODIFY `RoleID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `UserID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `employees`
+--
+ALTER TABLE `employees`
+  ADD CONSTRAINT `EmpCreated_By` FOREIGN KEY (`Created_By`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `employees-roles`
@@ -152,6 +306,26 @@ ALTER TABLE `roles`
 ALTER TABLE `employees-roles`
   ADD CONSTRAINT `employees-roles_ibfk_1` FOREIGN KEY (`EmployeeID`) REFERENCES `employees` (`EmployeeID`) ON DELETE CASCADE,
   ADD CONSTRAINT `employees-roles_ibfk_2` FOREIGN KEY (`RoleID`) REFERENCES `roles` (`RoleID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `orderheaders`
+--
+ALTER TABLE `orderheaders`
+  ADD CONSTRAINT `orderheaders_ibfk_1` FOREIGN KEY (`Order_By`) REFERENCES `users` (`UserID`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `orderlines`
+--
+ALTER TABLE `orderlines`
+  ADD CONSTRAINT `orderlines_ibfk_1` FOREIGN KEY (`HeaderID`) REFERENCES `orderheaders` (`HeaderID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `orderlines_ibfk_2` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `productlogs`
+--
+ALTER TABLE `productlogs`
+  ADD CONSTRAINT `productlogs_ibfk_1` FOREIGN KEY (`ProductID`) REFERENCES `products` (`ProductID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `productlogs_ibfk_2` FOREIGN KEY (`Modified_By`) REFERENCES `employees` (`EmployeeID`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `products`
