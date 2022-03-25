@@ -5,7 +5,7 @@ CREATE PROCEDURE `getOrdersUser`
 BEGIN
 	SELECT `Creation_Date`, `HeaderID`, `Total_Price`, `Status`
 	FROM `OrderHeaders`
-	WHERE `Order_by` = `userID`
+	WHERE `Order_by` = `userID`;
 END
 //
 	
