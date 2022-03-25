@@ -2,6 +2,11 @@
 -- DROP TABLE nodig?
 -- Users Country nodig?
 
+DROP DATABASE IF EXISTS `stilteaubbv`;
+CREATE DATABASE `stilteaubbv`;
+
+USE `stilteaubbv`;
+
 CREATE TABLE `employees` (
 	`EmployeeID` INT NOT NULL AUTO_INCREMENT,
 	`First_Name` VARCHAR(25) NOT NULL,
