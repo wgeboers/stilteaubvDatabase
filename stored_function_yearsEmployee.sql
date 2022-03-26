@@ -1,6 +1,6 @@
 -- DROP FUNCTION yearsEmployeeInCompany;
 DELIMITER //
-CREATE FUNCTION `yearsEmployeeInCompany`(`empID` INT)
+CREATE OR REPLACE FUNCTION `yearsEmployeeInCompany`(`empID` INT)
 	RETURNS INT
 BEGIN
 	-- Variable voor het startJaar`
