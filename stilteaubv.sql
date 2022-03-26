@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 21, 2022 at 01:15 AM
+-- Generation Time: Mar 26, 2022 at 12:10 PM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 8.0.11
 
@@ -86,7 +86,6 @@ CREATE TABLE `invoices` (
 `First_Name` varchar(25)
 ,`Last_Name` varchar(25)
 ,`Email` varchar(50)
-,`Phone_Number` varchar(20)
 ,`Total_Price` decimal(65,2)
 );
 
@@ -178,8 +177,7 @@ CREATE TABLE `orderstatus` (
 `First_Name` varchar(25)
 ,`Last_Name` varchar(25)
 ,`Email` varchar(50)
-,`Phone_Number` varchar(20)
-,`Total_Price` decimal(65,2)
+,`Status` varchar(25)
 );
 
 -- --------------------------------------------------------
@@ -339,7 +337,7 @@ INSERT INTO `users` (`UserID`, `First_Name`, `Middle_Name`, `Last_Name`, `Email`
 --
 DROP TABLE IF EXISTS `invoices`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `invoices`  AS SELECT `users`.`First_Name` AS `First_Name`, `users`.`Last_Name` AS `Last_Name`, `users`.`Email` AS `Email`, `users`.`Phone_Number` AS `Phone_Number`, `orderheaders`.`Total_Price` AS `Total_Price` FROM (`users` join `orderheaders`) WHERE `users`.`UserID` = `orderheaders`.`Order_By` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `invoices`  AS   (select `users`.`First_Name` AS `First_Name`,`users`.`Last_Name` AS `Last_Name`,`users`.`Email` AS `Email`,`orderheaders`.`Total_Price` AS `Total_Price` from (`users` join `orderheaders` on(`users`.`UserID` = `orderheaders`.`Order_By`)))  ;
 
 -- --------------------------------------------------------
 
@@ -348,7 +346,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `orderstatus`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `orderstatus`  AS   (select `users`.`First_Name` AS `First_Name`,`users`.`Last_Name` AS `Last_Name`,`users`.`Email` AS `Email`,`users`.`Phone_Number` AS `Phone_Number`,`orderheaders`.`Total_Price` AS `Total_Price` from (`users` join `orderheaders`) where `users`.`UserID` = `orderheaders`.`Order_By`)  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `orderstatus`  AS   (select `users`.`First_Name` AS `First_Name`,`users`.`Last_Name` AS `Last_Name`,`users`.`Email` AS `Email`,`orderheaders`.`Status` AS `Status` from (`users` join `orderheaders` on(`users`.`UserID` = `orderheaders`.`Order_By`)))  ;
 
 -- --------------------------------------------------------
 
