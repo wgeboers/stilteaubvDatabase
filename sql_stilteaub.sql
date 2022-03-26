@@ -1,7 +1,3 @@
--- DDL database StilteAUB
--- DROP TABLE nodig?
--- Users Country nodig?
-
 DROP DATABASE IF EXISTS `stilteaubbv`;
 CREATE DATABASE `stilteaubbv`;
 
@@ -143,6 +139,7 @@ CREATE TABLE `orderlines` (
 
 -- Stored procedure, retrieve orders from user based on userID
 DELIMITER //
+
 CREATE PROCEDURE `getOrdersUser`
 	(IN `userID` INT)
 BEGIN
@@ -151,6 +148,8 @@ BEGIN
 	WHERE `Order_by` = `userID`;
 END
 //
+
+DELIMITER ;
 	
 -- Dummy data table `users`
 
